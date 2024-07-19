@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome</title>
+    <link rel="stylesheet" href="./welcome.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="content-box">
+        <h1>Welcome</h1>
+        <p id="welcomeMessage"></p>
+      </div>
+
+      <div class="content-box comment-section">
+        <h2>Submit a Comment</h2>
+        <form id="commentForm" class="comment-form">
+          <textarea
+            id="commentContent"
+            required
+            placeholder="Enter your comment here..."
+          ></textarea>
+          <button type="submit">Submit Comment</button>
+        </form>
+
+        <h2>Comments</h2>
+        <div id="commentsContainer" class="comments-container"></div>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const user = params.get("username");
+      document.getElementById("welcomeMessage").innerHTML =
+        "Welcome, " + user + "!";
+
+      // Fetch and display comments
+      function fetchComments() {
+        fetch("http://localhost:3000/api/auth/comments")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              const commentsHtml = data.comments
+                .map((comment) => (
+                  <div class="comment">
+                    <strong>${comment.username}</strong>: ${comment.content}
+                  </div>
+                ))
+                .join("");
+              document.getElementById("commentsContainer").innerHTML =
+                commentsHtml;
+            }
+          })
+          .catch((error) => console.error("Error fetching comments:", error));
+      }
+
+      // Submit a comment
+      document.getElementById("commentForm").onsubmit = function (event) {
+        event.preventDefault();
+        const content = document.getElementById("commentContent").value;
+        fetch("http://localhost:3000/api/auth/comment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId: 1, content: content }), // Replace 1 with actual user ID
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Comment submitted successfully");
+              document.getElementById("commentContent").value = "";
+              fetchComments(); // Refresh comments
+            } else {
+              alert("Error submitting comment");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      };
+
+      // Initial fetch of comments
+      fetchComments();
+    </script>
+  </body>
+</html>

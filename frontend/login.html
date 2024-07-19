@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        autocomplete="username"
+      /><br /><br />
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        autocomplete="current-password"
+      /><br /><br />
+      <button type="submit">Login</button>
+    </form>
+    <form id="logoutForm" style="display: none">
+      <h1>Welcome, <span id="welcomeUser"></span>!</h1>
+      <button type="submit">Logout</button>
+    </form>
+    <script src="./main.js"></script>
+  </body>
+</html>
