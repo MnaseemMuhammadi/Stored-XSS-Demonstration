@@ -27,8 +27,8 @@ The website is intentionally vulnerable to stored XSS attacks, allowing users to
 
 #### If you want to Clone the Repository
 
-git clone <repository-url>
-cd <repository-directory>
+git clone [<repository-url>](https://github.com/MnaseemMuhammadi/Stored-XSS-Demonstration)
+cd <repository-directory>project
 
 #### Backend Setup
 
