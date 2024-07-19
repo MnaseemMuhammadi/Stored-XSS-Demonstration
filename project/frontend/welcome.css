@@ -98,3 +98,27 @@ input {
 button {
   padding: 10px 20px;
 }
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #f44336; /* Red background */
+  color: white; /* White text */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.return-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Profile</title>
+    <link rel="stylesheet" href="./welcome.css" />
+  </head>
+  <body>
+    <button class="return-button" onclick="location.href='welcome.html'">
+      Return to Welcome Page
+    </button>
+
+    <div class="container">
+      <h1>User Profile</h1>
+
+      <div class="content-box" id="profileDisplay">
+        <!-- Profile information will be displayed here -->
+      </div>
+
+      <div class="content-box">
+        <button id="editProfileButton">Edit Profile</button>
+      </div>
+
+      <div class="content-box" id="profileFormContainer" style="display: none">
+        <form id="profileForm">
+          <label for="fullName">Full Name:</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            required
+          /><br /><br />
+
+          <label for="bio">Bio:</label>
+          <textarea id="bio" name="bio" rows="4" cols="50"></textarea
+          ><br /><br />
+
+          <label for="website">Website:</label>
+          <input type="url" id="website" name="website" /><br /><br />
+
+          <button type="submit">Save Profile</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      console.log("Profile script loaded");
+
+      // Toggle profile form visibility
+      document
+        .getElementById("editProfileButton")
+        .addEventListener("click", function () {
+          const profileFormContainer = document.getElementById(
+            "profileFormContainer"
+          );
+          const profileDisplay = document.getElementById("profileDisplay");
+          const isFormVisible = profileFormContainer.style.display === "block";
+          profileFormContainer.style.display = isFormVisible ? "none" : "block";
+          profileDisplay.style.display = isFormVisible ? "block" : "none";
+        });
+
+      // Handle profile form submission
+      document.getElementById("profileForm").onsubmit = function (event) {
+        event.preventDefault();
+        const fullName = document.getElementById("fullName").value;
+        const bio = document.getElementById("bio").value;
+        const website = document.getElementById("website").value;
+
+        fetch("http://localhost:3000/api/profile/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ fullName, bio, website }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert("Profile updated successfully");
+              fetchProfile();
+              document.getElementById("profileFormContainer").style.display =
+                "none";
+              document.getElementById("profileDisplay").style.display = "block";
+            } else {
+              alert("Error updating profile");
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      };
+
+      // Fetch profile on page load
+      function fetchProfile() {
+        fetch("http://localhost:3000/api/profile/get")
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              document.getElementById("profileDisplay").innerHTML = `
+                <h2>${data.profile.full_name}</h2>
+                <p>${data.profile.bio}</p>
+                <p>Website: <a href="${data.profile.website}">${data.profile.website}</a></p>
+              `;
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      fetchProfile(); // Initial profile fetch
+    </script>
+  </body>
+</html>

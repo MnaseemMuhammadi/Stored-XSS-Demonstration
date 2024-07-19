@@ -26,8 +26,8 @@ router.post("/login", (req, res) => {
       return;
     }
     if (results.length > 0) {
-      req.session.user = results[0];
-      res.json({ success: true, username: username });
+      req.session.user = results[0]; // Store user info in session
+      res.json({ success: true, username: username, userId: results[0].id });
     } else {
       res.status(401).json({ success: false, message: "Invalid credentials" });
     }
@@ -75,6 +75,14 @@ router.get("/comments", (req, res) => {
     }
     res.json({ success: true, comments: results });
   });
+});
+
+router.get("/user", (req, res) => {
+  if (req.session.user) {
+    res.json({ userId: req.session.user.id }); // Assuming 'id' is the primary key in your 'users' table
+  } else {
+    res.status(401).json({ message: "Not logged in" });
+  }
 });
 
 module.exports = router;

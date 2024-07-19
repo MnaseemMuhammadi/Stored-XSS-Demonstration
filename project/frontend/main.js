@@ -92,6 +92,78 @@ function setupForms() {
 // Set up forms when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", setupForms);
 
+document.addEventListener("DOMContentLoaded", function () {
+  const params = new URLSearchParams(window.location.search);
+  const user = params.get("username");
+  document.getElementById("welcomeMessage").textContent = user
+    ? `Welcome, ${user}!`
+    : "Welcome!";
+
+  function fetchComments() {
+    fetch("http://localhost:3000/api/auth/comments")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const commentsHtml = data.comments
+            .map(
+              (comment) =>
+                `<div class="comment">
+                    <strong>${comment.username}</strong>: ${comment.content}
+                  </div>`
+            )
+            .join("");
+          document.getElementById("commentsContainer").innerHTML = commentsHtml;
+        }
+      })
+      .catch((error) => console.error("Error fetching comments:", error));
+  }
+
+  document.getElementById("commentForm").onsubmit = function (event) {
+    event.preventDefault();
+    const content = document.getElementById("commentContent").value;
+    fetch("http://localhost:3000/api/auth/comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId: 1, content: content }), // Replace 1 with actual user ID
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Comment submitted successfully");
+          document.getElementById("commentContent").value = "";
+          fetchComments(); // Refresh comments
+        } else {
+          alert("Error submitting comment");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  // Initial fetch of comments
+  fetchComments();
+});
+
+const logoutButton = document.getElementById("logoutButton");
+if (logoutButton) {
+  logoutButton.addEventListener("click", function () {
+    fetch("http://localhost:3000/api/auth/logout", {
+      method: "POST",
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        if (data === "Logout successful") {
+          alert("You have been logged out");
+          window.location.href = "login.html";
+        } else {
+          alert("Error logging out");
+        }
+      })
+      .catch((error) => console.error("Logout error:", error));
+  });
+}
+
 // Prevent multiple script execution
 if (window.hasRun) {
   console.log("Script has already run, skipping execution");

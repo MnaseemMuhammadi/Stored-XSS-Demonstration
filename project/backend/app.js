@@ -5,6 +5,7 @@ const session = require("express-session");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
+const profileRoutes = require("./routes/profile");
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/profile", profileRoutes);
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
