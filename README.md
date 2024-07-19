@@ -13,7 +13,7 @@ This project is a demonstration website designed to showcase vulnerable stored X
 
 ## Vulnerabilities Demonstrated
 
-The website is intentionally vulnerable to stored XSS attacks, allowing users to inject and store malicious scripts through comment submissions. This setup is useful for educational purposes, security training, or penetration testing exercises.
+The website is intentionally vulnerable to stored XSS attacks, allowing users to inject and store malicious scripts through comment and profile update submissions. This setup is a penetration attempt practice.
 
 ## Getting Started
 
@@ -28,6 +28,34 @@ The website is intentionally vulnerable to stored XSS attacks, allowing users to
 #### If you want to Clone the Repository
 
 git clone here's the url: (https://github.com/MnaseemMuhammadi/Stored-XSS-Demonstration)
+
+### SQL Database Setup (QUERY)
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `content` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+)
+
+CREATE TABLE IF NOT EXISTS `user_profiles` (
+  `user_id` int NOT NULL,
+  `full_name` varchar(255) DEFAULT NULL,
+  `bio` text,
+  `website` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `user_profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+)
 
 #### Backend Setup
 
